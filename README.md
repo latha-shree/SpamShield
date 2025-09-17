@@ -127,4 +127,4 @@ Cloud deployment (AWS/Heroku)
 ![image](https://github.com/latha-shree/SpamShield/blob/main/image_spam.png)
 ![img](https://github.com/latha-shree/SpamShield/blob/main/image-result.png)
 ![audio](https://github.com/latha-shree/SpamShield/blob/main/audio_spam.png)
-
+![batch](https://github.com/latha-shree/SpamShield/blob/main/batch.png)
