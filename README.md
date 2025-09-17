@@ -121,6 +121,7 @@ Cloud deployment (AWS/Heroku)
 ![model](https://github.com/latha-shree/SpamShield/blob/main/model.png)
 ![user_management](https://github.com/latha-shree/SpamShield/blob/main/user_management.png)
 ![system_analysis](https://github.com/latha-shree/SpamShield/blob/main/systen_analystcs.png)
+![user_reg](https://github.com/latha-shree/SpamShield/blob/main/reg.png)
 ![text_spam](https://github.com/latha-shree/SpamShield/blob/main/text_spam.png)
 
 
