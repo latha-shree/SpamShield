@@ -112,3 +112,9 @@ Integration with Gmail/Outlook API for live spam detection in inbox
 Improved deep learning models (LSTM, BERT)
 
 Cloud deployment (AWS/Heroku)
+
+
+
+
+
+
