@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login - SpamShield</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      min-height: 100vh;
+      color: white;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 3, 32, 0.85);
+      z-index: -1;
+    }
+
+    .container-wrapper {
+      max-width: 400px;
+      margin: 3rem auto 0;
+      position: relative;
+      padding: 0 15px;
+    }
+
+    /* Back button - positioned top left of window */
+    .back-button-container {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      z-index: 1000;
+    }
+
+    .btn-back {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.3s ease;
+    }
+
+    .btn-back:hover {
+      background: rgba(255, 255, 255, 0.2);
+      text-decoration: none;
+      transform: translateX(-3px);
+    }
+
+    /* Logo styling */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 2rem;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 15px rgba(79, 172, 254, 0.5);
+    }
+
+    .logo-icon {
+      color: white;
+      font-size: 1.5rem;
+    }
+
+    .logo-text {
+      margin-left: 0.75rem;
+      font-weight: 600;
+      font-size: 1.5rem;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: white;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+    }
+
+    .form-control {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .form-control:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: white;
+      box-shadow: 0 0 0 0.25rem rgba(79, 172, 254, 0.25);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      border: none;
+      font-weight: 500;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #3a8fd9, #00c8e0);
+      transform: translateY(-2px);
+    }
+
+    .alert-danger {
+      background: rgba(220, 53, 69, 0.2);
+      border: 1px solid rgba(220, 53, 69, 0.3);
+      color: white;
+      backdrop-filter: blur(10px);
+    }
+
+    a {
+      color: #4facfe;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      display: block;
+      color: white;
+    }
+
+    h2 {
+      color: white;
+      font-weight: 600;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    @media (max-width: 576px) {
+      .back-button-container {
+        top: 15px;
+        left: 15px;
+      }
+      
+      .container-wrapper {
+        margin-top: 4rem;
+        padding: 0 15px;
+      }
+      
+      .logo {
+        width: 40px;
+        height: 40px;
+      }
+
+      .logo-text {
+        font-size: 1.25rem;
+      }
+
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Back button - fixed to top left of window -->
+  <div class="back-button-container">
+    <a href="/" class="btn btn-back">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+  </div>
+
+  <div class="container-wrapper">
+    <!-- Logo -->
+    <div class="logo-container">
+      <div class="logo">
+        <i class="fas fa-shield-alt logo-icon"></i>
+      </div>
+      <span class="logo-text">SpamShield</span>
+    </div>
+
+    <!-- Admin Login Card -->
+    <div class="card">
+      <h2 class="text-center mb-4">🔐 Admin Login</h2>
+      <form method="POST">
+        <div class="mb-3">
+          <label>Admin Username</label>
+          <input type="text" name="username" class="form-control" required placeholder="Enter admin username">
+        </div>
+        <div class="mb-3">
+          <label>Password</label>
+          <input type="password" name="password" class="form-control" required placeholder="Enter admin password">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Login</button>
+      </form>
+      
+      {% if error %}
+        <div class="alert alert-danger mt-3">{{ error }}</div>
+      {% endif %}
+      
+      
+      <!--<p class="text-center mt-3">
+        <a href="/" class="text-decoration-none">← Back to Home</a>
+      </p>-->
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

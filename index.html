@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpamShield | AI Protection Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --light: #f8f9fa;
+      --text-dark: #2b2d42;
+      --text-light: #4a4e69;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      min-height: 100vh;
+      color: white;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 9, 43, 0.85);
+      z-index: -1;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    /* Faster animated particles */
+    .particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      background: rgba(67, 97, 238, 0.4);
+      border-radius: 50%;
+      animation: float 5s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(0deg);
+      }
+      50% {
+        transform: translateY(-60px) rotate(180deg);
+      }
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      animation: fadeInDown 0.8s ease-out;
+    }
+
+    .title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: relative;
+      display: inline-block;
+    }
+
+    .title::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      border-radius: 2px;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      color: rgba(255, 255, 255, 0.9);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Security Features */
+    .security-features {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      margin-bottom: 3rem;
+      flex-wrap: wrap;
+      animation: fadeInUp 0.8s ease-out 0.3s both;
+    }
+
+    .feature-badge {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    .feature-badge:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.15);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .feature-badge i {
+      color: #4facfe;
+      font-size: 1.2rem;
+    }
+
+    /* Cards */
+    .cards-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2rem;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: fadeInUp 0.8s ease-out;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card:nth-child(1) {
+      animation-delay: 0.4s;
+    }
+    .card:nth-child(2) {
+      animation-delay: 0.6s;
+    }
+    .card:nth-child(3) {
+      animation-delay: 0.8s;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+      transition: height 0.3s ease;
+    }
+
+    .card:hover::before {
+      height: 10px;
+    }
+
+    .card:hover {
+      transform: translateY(-10px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+      background: rgba(255, 255, 255, 0.15);
+    }
+
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: all 0.3s ease;
+      display: inline-block;
+    }
+
+    .card:hover .card-icon {
+      transform: scale(1.2) rotate(5deg);
+    }
+
+    .card h3 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: white;
+    }
+
+    .card p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1rem;
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 0.875rem 2rem;
+      border-radius: 50px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(79, 172, 254, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: white;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.5);
+    }
+
+    .btn-accent {
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+      color: white;
+    }
+
+    .btn-accent:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(240, 147, 251, 0.4);
+    }
+
+    /* Animations */
+    @keyframes fadeInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .title {
+        font-size: 2.5rem;
+      }
+      
+      .security-features {
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+      }
+      
+      .cards-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .title {
+        font-size: 2rem;
+      }
+      
+      .card {
+        padding: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Faster animated particles -->
+  <div class="particles" id="particles"></div>
+
+  <div class="container">
+    <div class="header">
+      <h1 class="title">
+        <i class="fas fa-shield-alt"></i> SpamShield
+      </h1>
+      <p class="subtitle">
+        Advanced AI-powered protection against spam messages, emails, and malicious content
+      </p>
+    </div>
+
+    <div class="security-features">
+      <div class="feature-badge">
+        <i class="fas fa-lock"></i>
+        <span>End-to-End Encryption</span>
+      </div>
+      <div class="feature-badge">
+        <i class="fas fa-robot"></i>
+        <span>AI-Powered Detection</span>
+      </div>
+      <div class="feature-badge">
+        <i class="fas fa-bolt"></i>
+        <span>Real-Time Analysis</span>
+      </div>
+    </div>
+
+    <div class="cards-container">
+      <div class="card">
+        <div class="card-icon">
+          <i class="fas fa-user-plus"></i>
+        </div>
+        <h3>User Registration</h3>
+        <p>Create your account to access our powerful spam detection tools and protect your communications</p>
+        <a href="/register" class="btn btn-primary">Get Started</a>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <i class="fas fa-sign-in-alt"></i>
+        </div>
+        <h3>User Login</h3>
+        <p>Access your personalized dashboard to manage your spam detection settings and history</p>
+        <a href="/login" class="btn btn-outline">Sign In</a>
+      </div>
+
+      <div class="card">
+        <div class="card-icon">
+          <i class="fas fa-user-shield"></i>
+        </div>
+        <h3>Admin Portal</h3>
+        <p>Administrator access for managing detection models, training data, and system settings</p>
+        <a href="/admin_login" class="btn btn-accent">Admin Login</a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Create dynamic particles with faster animation
+    document.addEventListener('DOMContentLoaded', function() {
+      const particlesContainer = document.getElementById('particles');
+      
+      // Create 20 particles for more movement
+      for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random properties with faster animation
+        const size = Math.floor(Math.random() * 15) + 5;
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        const delay = Math.random() * 3;
+        const duration = 3 + Math.random() * 4; // Faster duration
+        const opacity = 0.3 + Math.random() * 0.4;
+        
+        // Apply styles
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}%`;
+        particle.style.top = `${posY}%`;
+        particle.style.animationDelay = `${delay}s`;
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.opacity = opacity;
+        
+        particlesContainer.appendChild(particle);
+      }
+      
+      // Enhanced hover effects
+      const cards = document.querySelectorAll('.card');
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+          card.style.transform = 'translateY(-10px) scale(1.02)';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = 'translateY(0) scale(1)';
+        });
+      });
+      
+      // Ripple effect for buttons
+      const buttons = document.querySelectorAll('.btn');
+      buttons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          const ripple = document.createElement('span');
+          ripple.style.position = 'absolute';
+          ripple.style.borderRadius = '50%';
+          ripple.style.backgroundColor = 'rgba(255, 255, 255, 0.4)';
+          ripple.style.transform = 'scale(0)';
+          ripple.style.animation = 'ripple 0.6s linear';
+          ripple.style.pointerEvents = 'none';
+          
+          const rect = this.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height);
+          const x = e.clientX - rect.left - size / 2;
+          const y = e.clientY - rect.top - size / 2;
+          
+          ripple.style.width = ripple.style.height = `${size}px`;
+          ripple.style.left = `${x}px`;
+          ripple.style.top = `${y}px`;
+          
+          this.appendChild(ripple);
+          
+          setTimeout(() => {
+            ripple.remove();
+          }, 600);
+        });
+      });
+      
+      // Add ripple animation
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes ripple {
+          to {
+            transform: scale(4);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+    });
+  </script>
+</body>
+</html>

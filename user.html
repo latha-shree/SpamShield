@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Text Spam Detection - SpamShield</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --light: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      min-height: 100vh;
+      color: white;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 3, 32, 0.85);
+      z-index: -1;
+    }
+
+    /* Animated floating particles */
+    .particle {
+      position: absolute;
+      background: rgba(67, 97, 238, 0.3);
+      border-radius: 50%;
+      animation: float 15s infinite linear;
+      z-index: -1;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translateY(0) rotate(0deg) translateX(0);
+      }
+      50% {
+        transform: translateY(-100px) rotate(180deg) translateX(100px);
+      }
+      100% {
+        transform: translateY(0) rotate(360deg) translateX(0);
+      }
+    }
+
+    .container-wrapper {
+      max-width: 600px;
+      margin: 8rem auto 3rem auto; /* top spacing between nav & card */
+      position: relative;
+      padding: 0 15px;
+    }
+
+
+    /* Card styling */
+    .detection-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .detection-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+    }
+
+    .detection-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Header styling */
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+      position: relative;
+    }
+
+    .page-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      display: inline-block;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Form styling */
+    .form-control {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 10px;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: white;
+      box-shadow: 0 0 0 0.25rem rgba(79, 172, 254, 0.25);
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Button styling */
+    .btn-primary {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      border: none;
+      padding: 0.8rem;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #3a8fd9, #00c8e0);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+    }
+
+    /* Result styling */
+    .result-card {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      border-left: 4px solid #4facfe;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-label {
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.8);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-value {
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: white;
+    }
+
+    /* Navigation header */
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(0, 3, 32, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      font-size: 1.5rem;
+      color: #4facfe;
+    }
+
+    .logo-text {
+      font-weight: 600;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container-wrapper {
+        margin-top: 6rem;
+      }
+      
+      .detection-card {
+        padding: 1.5rem;
+      }
+      
+      .page-title {
+        font-size: 1.8rem;
+      }
+      
+      .nav-header {
+        padding: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <a href="/user_home" class="btn-nav">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+    <div class="logo">
+      <i class="fas fa-shield-alt logo-icon"></i>
+      <span class="logo-text">SpamShield</span>
+    </div>
+    <a href="/logout" class="btn-nav">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
+
+  <!-- Animated background particles -->
+  <div id="particles"></div>
+
+  <div class="container-wrapper">
+    <div class="detection-card">
+      <!-- ... (keep all existing code) ... -->
+<div class="page-header">
+  <div class="page-icon">
+    <i class="fas fa-search"></i> <!-- Magnifying glass for text analysis -->
+  </div>
+  <h1 class="page-title">Text Spam Detection</h1>
+  <p >Analyze text messages for spam content</p>
+</div>
+<!-- ... -->
+
+      <form method="POST">
+        <!--<textarea name="message" class="form-control mb-4" rows="6" placeholder="Enter your message here..." required></textarea>-->
+         <textarea name="message" class="form-control mb-4" rows="6" placeholder="Enter your message here..." required>{{ user_input }}</textarea>
+        <button class="btn btn-primary w-100">
+          <i class="fas fa-search mr-2"></i> Analyze Text
+        </button>
+      </form>
+
+     {% if prediction %}
+        <div class="result-card">
+          <div class="result-label">Prediction Result:</div>
+          <div class="result-value">{{ prediction }}</div>
+          <div class="mt-2 text-muted small">
+            <i class="fas fa-info-circle mr-1"></i>
+            Our AI model analyzes text patterns to detect spam with 96.7% accuracy
+          </div>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Create animated particles
+    document.addEventListener('DOMContentLoaded', function() {
+      const particlesContainer = document.getElementById('particles');
+      const particleCount = 15;
+      
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        
+        // Random properties
+        const size = Math.random() * 10 + 5;
+        const posX = Math.random() * 100;
+        const posY = Math.random() * 100;
+        const delay = Math.random() * 5;
+        const duration = 10 + Math.random() * 10;
+        
+        // Apply styles
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${posX}%`;
+        particle.style.top = `${posY}%`;
+        particle.style.animationDelay = `${delay}s`;
+        particle.style.animationDuration = `${duration}s`;
+        particle.style.opacity = 0.3 + Math.random() * 0.4;
+        
+        particlesContainer.appendChild(particle);
+      }
+
+      // Add focus effect to textarea
+      const textarea = document.querySelector('textarea');
+      textarea.addEventListener('focus', function() {
+        this.style.boxShadow = '0 0 0 0.25rem rgba(79, 172, 254, 0.25)';
+      });
+      
+      textarea.addEventListener('blur', function() {
+        this.style.boxShadow = 'none';
+      });
+    });
+  </script>
+</body>
+</html>

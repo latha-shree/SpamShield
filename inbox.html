@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Inbox - SpamShield</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --light: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      min-height: 100vh;
+      color: white;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 3, 32, 0.85);
+      z-index: -1;
+    }
+
+    /* Navigation Header */
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(0, 3, 32, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      font-size: 1.5rem;
+      color: #4facfe;
+    }
+
+    .logo-text {
+      font-weight: 600;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Main Content */
+    .container-wrapper {
+      max-width: 800px;
+      margin: 8rem auto 3rem;
+      position: relative;
+      padding: 0 15px;
+    }
+
+    /* Page Header */
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #4facfe;
+      background: rgba(79, 172, 254, 0.2);
+      width: 80px;
+      height: 80px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 2px solid rgba(79, 172, 254, 0.4);
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Email Cards */
+    .email-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    .email-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .email-card-header {
+      background: rgba(79, 172, 254, 0.2);
+      padding: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .email-card-body {
+      padding: 1.5rem;
+    }
+
+    .email-subject {
+      font-weight: 600;
+      color: white;
+      margin: 0;
+    }
+
+    .email-from {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+
+    .email-content {
+      color: rgba(255, 255, 255, 0.9);
+      line-height: 1.6;
+    }
+
+    /* Badges */
+    .badge {
+      font-weight: 500;
+      padding: 0.35rem 0.65rem;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      margin-left: 0.5rem;
+    }
+
+    .badge-spam {
+      background-color: rgba(220, 53, 69, 0.2);
+      color: #ff6b6b;
+      border: 1px solid #dc3545;
+    }
+
+    .badge-ham {
+      background-color: rgba(25, 135, 84, 0.2);
+      color: #6bff9e;
+      border: 1px solid #198754;
+    }
+
+    .badge-source {
+      background-color: rgba(108, 117, 125, 0.2);
+      color: rgba(255, 255, 255, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .badge-warning {
+      background-color: rgba(255, 193, 7, 0.2);
+      color: #ffd43b;
+      border: 1px solid #ffc107;
+    }
+
+    /* Mismatch Styling */
+    .email-mismatch {
+      border-left: 4px solid #ffc107;
+      animation: pulseWarning 2s infinite;
+    }
+
+    @keyframes pulseWarning {
+      0% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 193, 7, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 193, 7, 0); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container-wrapper {
+        margin-top: 7rem;
+      }
+      
+      .email-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+      
+      .badge {
+        margin-left: 0;
+        margin-right: 0.5rem;
+        margin-bottom: 0.25rem;
+      }
+      
+      .nav-header {
+        padding: 1rem;
+      }
+      
+      .page-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <a href="/user_home" class="btn-nav">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+    <div class="logo">
+      <i class="fas fa-shield-alt logo-icon"></i>
+      <span class="logo-text">SpamShield</span>
+    </div>
+    <a href="/logout" class="btn-nav">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
+
+  <div class="container-wrapper">
+    <div class="page-header">
+      <div class="page-icon">
+        <i class="fas fa-inbox"></i>
+      </div>
+      <h1 class="page-title">Email Inbox</h1>
+      <p>These emails are fetched live using your Gmail account via secure IMAP access</p>
+    </div>
+
+    {% for email in emails %}
+    <div class="email-card {% if email.mismatch %}email-mismatch{% endif %}">
+      <div class="email-card-header">
+        <h5 class="email-subject">{{ email.subject }}</h5>
+        <div>
+          <span class="badge {{ 'badge-spam' if email.label == 'Spam' else 'badge-ham' }}">
+            {{ email.label }}
+          </span>
+          <span class="badge badge-source">{{ email.source }}</span>
+          {% if email.mismatch %}
+          <span class="badge badge-warning">
+            <i class="fas fa-exclamation-triangle"></i> Misclassified
+          </span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="email-card-body">
+        <h6 class="email-from">From: {{ email.from }}</h6>
+        <p class="email-content">{{ email.body }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

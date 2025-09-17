@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel - SpamShield</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --light: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      min-height: 100vh;
+      color: white;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 3, 32, 0.85);
+      z-index: -1;
+    }
+
+    /* Navigation Header */
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(0, 3, 32, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      font-size: 1.5rem;
+      color: #4facfe;
+    }
+
+    .logo-text {
+      font-weight: 600;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Admin Card */
+    .admin-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2.5rem;
+      max-width: 700px;
+      margin: 8rem auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .admin-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+    }
+
+    /* Page Header */
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #4facfe;
+      background: rgba(79, 172, 254, 0.2);
+      width: 80px;
+      height: 80px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 2px solid rgba(79, 172, 254, 0.4);
+    }
+
+    .page-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Form Elements */
+    .form-control {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 10px;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: white;
+      box-shadow: 0 0 0 0.25rem rgba(79, 172, 254, 0.25);
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Custom file input */
+    .custom-file-input {
+      color: white;
+    }
+
+    .custom-file-input::-webkit-file-upload-button {
+      visibility: hidden;
+    }
+
+    .custom-file-input::before {
+      content: 'Choose CSV File';
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      outline: none;
+      white-space: nowrap;
+      cursor: pointer;
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .custom-file-input:hover::before {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Button Styling */
+    .btn-train {
+      background: linear-gradient(135deg, #1eb8f5, #1791e9);
+      border: none;
+      padding: 0.8rem;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      color: white;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      font-size: 1.1rem;
+      width: 100%;
+      margin-top: 1rem;
+    }
+
+    .btn-train:hover {
+      background: linear-gradient(135deg, hsl(192, 86%, 53%), #1abefa);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      color: white;
+    }
+
+    /* Alerts */
+    .alert {
+      border-radius: 10px;
+      padding: 1rem;
+      margin-top: 1.5rem;
+      border-left: 4px solid;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(5px);
+    }
+
+    .alert-success {
+      border-color: #198754;
+      color: #6bff9e;
+    }
+
+    .alert-danger {
+      border-color: #dc3545;
+      color: #ff6b6b;
+    }
+
+    .alert-info {
+      border-color: #0dcaf0;
+      color: #6bdfff;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .admin-card {
+        margin: 7rem auto 3rem;
+        padding: 1.5rem;
+      }
+      
+      .nav-header {
+        padding: 1rem;
+      }
+      
+      .page-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <a href="/admin_dashboard" class="btn-nav">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+    <div class="logo">
+      <i class="fas fa-shield-alt logo-icon"></i>
+      <span class="logo-text">SpamShield</span>
+    </div>
+    <a href="/logout" class="btn-nav">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
+
+  <!-- Admin Card -->
+  <div class="admin-card">
+    <div class="page-header">
+      <div class="page-icon">
+        <i class="fas fa-robot"></i>
+      </div>
+      <h1 class="page-title">Model Training</h1>
+      <p>Upload a CSV dataset to train the spam detection model</p>
+    </div>
+
+    <form method="POST" action="/upload_csv" enctype="multipart/form-data">
+      <input type="file" name="csv_file" class="form-control custom-file-input mb-3" accept=".csv" required>
+      <button type="submit" class="btn-train">
+        <i class="fas fa-brain"></i> Train Model
+      </button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            <i class="fas fa-{{ 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i> {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if accuracy %}
+    <div class="alert alert-success">
+      <i class="fas fa-chart-line"></i> Model retrained successfully with accuracy: <strong>{{ accuracy|round(2) }}%</strong>
+    </div>
+    {% endif %}
+  </div>
+
+
+  <!-- User Management Section 
+<div class="admin-card mt-4">
+  <div class="page-header">
+    <div class="page-icon">
+      <i class="fas fa-users-cog"></i>
+    </div>
+    <h1 class="page-title">User Management</h1>
+    <p>View or remove registered users from the system</p>
+  </div>
+
+  <div class="text-center">
+    <a href="/admin/users" class="btn-train" style="max-width: 300px; margin: auto;">
+      <i class="fas fa-user-shield"></i> Manage Users
+    </a>
+  </div>
+</div>-->
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Enhance file input display
+    document.addEventListener('DOMContentLoaded', function() {
+      const fileInput = document.querySelector('.custom-file-input');
+      
+      fileInput.addEventListener('change', function() {
+        if(this.files && this.files.length > 0) {
+          const fileName = this.files[0].name;
+          const label = document.createElement('span');
+          label.className = 'file-selected';
+          label.textContent = 'Selected: ' + fileName;
+          label.style.display = 'block';
+          label.style.marginTop = '0.5rem';
+          label.style.color = 'rgba(255,255,255,0.8)';
+          label.style.fontSize = '0.9rem';
+          
+          // Remove previous label if exists
+          const existingLabel = this.nextElementSibling;
+          if(existingLabel && existingLabel.classList.contains('file-selected')) {
+            existingLabel.remove();
+          }
+          
+          this.parentNode.insertBefore(label, this.nextSibling);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

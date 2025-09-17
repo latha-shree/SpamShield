@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batch Spam Detection - SpamShield</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --light: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      min-height: 100vh;
+      color: white;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 3, 32, 0.85);
+      z-index: -1;
+    }
+
+    /* Navigation Header */
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(0, 3, 32, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      font-size: 1.5rem;
+      color: #4facfe;
+    }
+
+    .logo-text {
+      font-weight: 600;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Main Content */
+    .container-wrapper {
+      max-width: 800px;
+      margin: 8rem auto 3rem;
+      position: relative;
+      padding: 0 15px;
+    }
+
+    /* Detection Card */
+    .detection-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2.5rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .detection-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+    }
+
+    /* Page Header */
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #4facfe;
+      background: rgba(79, 172, 254, 0.2);
+      width: 80px;
+      height: 80px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 2px solid rgba(79, 172, 254, 0.4);
+    }
+
+    .page-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Form Elements */
+    .form-control {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: white;
+      border-radius: 10px;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: rgba(255, 255, 255, 0.3);
+      color: white;
+      box-shadow: 0 0 0 0.25rem rgba(79, 172, 254, 0.25);
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Custom file input */
+    .custom-file-input {
+      color: white;
+    }
+
+    .custom-file-input::-webkit-file-upload-button {
+      visibility: hidden;
+    }
+
+    .custom-file-input::before {
+      content: 'Choose CSV File';
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 0.5rem 1rem;
+      outline: none;
+      white-space: nowrap;
+      cursor: pointer;
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .custom-file-input:hover::before {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Button Styling */
+    .btn-upload {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      border: none;
+      padding: 0.8rem;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      color: white;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    .btn-upload:hover {
+      background: linear-gradient(135deg, #3a8fd9, #00c8e0);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      color: white;
+    }
+
+    /* Results Styling */
+    .results-container {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+      border-left: 4px solid #4facfe;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .result-label {
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.9);
+      margin-bottom: 0.5rem;
+    }
+
+    .result-value {
+      font-weight: 700;
+      color: white;
+      margin-bottom: 1rem;
+    }
+
+    /* Table Styling */
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .custom-table th, 
+    .custom-table td {
+      padding: 0.75rem;
+      text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .custom-table th {
+      background: rgba(79, 172, 254, 0.2);
+      color: white;
+      font-weight: 600;
+    }
+
+    .custom-table tr:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    /* Chart Styling */
+    .chart-container {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.5rem 0;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Download Button */
+    .btn-download {
+      background: linear-gradient(135deg, #198754, #20c997);
+      border: none;
+      padding: 0.8rem;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      color: white;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      font-size: 1.1rem;
+      margin-top: 1rem;
+    }
+
+    .btn-download:hover {
+      background: linear-gradient(135deg, #157347, #1aa179);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      color: white;
+    }
+
+    /* Error Styling */
+    .error-container {
+      background: rgba(220, 53, 69, 0.2);
+      border-radius: 10px;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-left: 4px solid #dc3545;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container-wrapper {
+        margin-top: 7rem;
+      }
+      
+      .detection-card {
+        padding: 1.5rem;
+      }
+      
+      .nav-header {
+        padding: 1rem;
+      }
+      
+      .page-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <a href="/user_home" class="btn-nav">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+    <div class="logo">
+      <i class="fas fa-shield-alt logo-icon"></i>
+      <span class="logo-text">SpamShield</span>
+    </div>
+    <a href="/logout" class="btn-nav">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
+
+  <div class="container-wrapper">
+    <div class="detection-card">
+      <div class="page-header">
+        <div class="page-icon">
+          <i class="fas fa-file-csv"></i>
+        </div>
+        <h1 class="page-title">Batch Spam Detection</h1>
+        <p>Upload a CSV file to analyze multiple messages at once</p>
+      </div>
+
+      <form method="post" enctype="multipart/form-data">
+        <input type="file" name="csv_file" class="form-control custom-file-input mb-3" accept=".csv" required>
+        <button class="btn btn-upload w-100">
+          <i class="fas fa-cloud-upload-alt mr-2"></i> Upload & Analyze
+        </button>
+      </form>
+
+      {% if error %}
+        <div class="error-container mt-4">
+          <i class="fas fa-exclamation-circle"></i> {{ error }}
+        </div>
+      {% endif %}
+
+      {% if table %}
+        <div class="results-container">
+          <h3 class="result-label"><i class="fas fa-chart-pie"></i> Analysis Summary</h3>
+          <div class="result-value">Total Messages: {{ total }}</div>
+          <div class="result-value" style="color: #dc3545;">Spam: {{ spam }}</div>
+          <div class="result-value" style="color: #198754;">Not Spam: {{ ham }}</div>
+        </div>
+
+        <div class="chart-container">
+          <canvas id="pieChart" width="250" height="250"></canvas>
+        </div>
+
+        <div class="results-container">
+          <h3 class="result-label"><i class="fas fa-table"></i> Top 10 Rows</h3>
+          <div class="table-responsive">{{ table|safe }}</div>
+        </div>
+
+        <form method="post" action="/download_csv">
+          <input type="hidden" name="csv_data" value="{{ csv_download }}">
+          <button class="btn btn-download w-100">
+            <i class="fas fa-download mr-2"></i> Download CSV with Predictions
+          </button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    {% if chart_data %}
+    const ctx = document.getElementById('pieChart').getContext('2d');
+    const data = JSON.parse('{{ chart_data|safe }}');
+    new Chart(ctx, {
+      type: 'pie',
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Spam vs Not Spam',
+          data: data.data,
+          backgroundColor: ['#dc3545', '#198754'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: false,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: {
+            labels: {
+              color: 'white',
+              font: {
+                family: "'Poppins', sans-serif"
+              }
+            }
+          }
+        }
+      }
+    });
+    {% endif %}
+
+    // Enhance file input display
+    document.addEventListener('DOMContentLoaded', function() {
+      const fileInput = document.querySelector('.custom-file-input');
+      
+      fileInput.addEventListener('change', function() {
+        if(this.files && this.files.length > 0) {
+          const fileName = this.files[0].name;
+          const label = document.createElement('span');
+          label.className = 'file-selected';
+          label.textContent = 'Selected: ' + fileName;
+          label.style.display = 'block';
+          label.style.marginTop = '0.5rem';
+          label.style.color = 'rgba(255,255,255,0.8)';
+          label.style.fontSize = '0.9rem';
+          
+          // Remove previous label if exists
+          const existingLabel = this.nextElementSibling;
+          if(existingLabel && existingLabel.classList.contains('file-selected')) {
+            existingLabel.remove();
+          }
+          
+          this.parentNode.insertBefore(label, this.nextSibling);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - SpamShield</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --light: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      min-height: 100vh;
+      color: white;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 3, 32, 0.85);
+      z-index: -1;
+    }
+
+    /* Navigation Header */
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(0, 3, 32, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      font-size: 1.5rem;
+      color: #4facfe;
+    }
+
+    .logo-text {
+      font-weight: 600;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Admin Cards Container */
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 2rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 8rem auto 2rem;
+    }
+
+    /* Admin Card Styling */
+    .admin-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2.5rem;
+      width: 350px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+
+    .admin-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+    }
+
+    .admin-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    }
+
+    .admin-card .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.5rem;
+      color: #4facfe;
+      background: rgba(79, 172, 254, 0.2);
+      width: 80px;
+      height: 80px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 2px solid rgba(79, 172, 254, 0.4);
+    }
+
+    .admin-card h4 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .admin-card p {
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      line-height: 1.7;
+    }
+
+    .admin-card .btn {
+      background: linear-gradient(135deg, #1eb8f5, #1791e9);
+      border: none;
+      padding: 0.8rem 1.5rem;
+      font-weight: 600;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      color: white;
+      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      font-size: 1rem;
+      width: 100%;
+      max-width: 200px;
+      margin: 0 auto;
+    }
+
+    .admin-card .btn:hover {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+      color: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .card-container {
+        margin: 7rem auto 2rem;
+        padding: 1.5rem;
+      }
+      
+      .nav-header {
+        padding: 1rem;
+      }
+      
+      .admin-card {
+        padding: 2rem;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <a href="/" class="btn-nav">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+    <div class="logo">
+      <i class="fas fa-shield-alt logo-icon"></i>
+      <span class="logo-text">SpamShield</span>
+    </div>
+    <a href="/logout" class="btn-nav">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
+
+  <!-- Admin Cards Container -->
+  <div class="card-container">
+    <!-- Model Training Card -->
+    <div class="admin-card">
+      <div class="card-icon">
+        <i class="fas fa-brain"></i>
+      </div>
+      <h4>Model Training</h4>
+      <p>Upload a CSV dataset to retrain the spam detection model with updated accuracy and improved performance.</p>
+      <a href="/admin" class="btn">
+        <i class="fas fa-upload"></i> Train Model
+      </a>
+    </div>
+
+    <!-- User Management Card -->
+    <div class="admin-card">
+      <div class="card-icon">
+        <i class="fas fa-users-cog"></i>
+      </div>
+      <h4>User Management</h4>
+      <p>View all registered users, manage accounts, and control access permissions across the platform.</p>
+      <a href="/user_management" class="btn">
+        <i class="fas fa-user-shield"></i> Manage Users
+      </a>
+    </div>
+
+    <!-- System Analytics Card -->
+    <div class="admin-card">
+      <div class="card-icon">
+        <i class="fas fa-chart-line"></i>
+      </div>
+      <h4>System Analytics</h4>
+      <p>View detailed statistics, performance metrics, and usage patterns of the SpamShield platform.</p>
+      <a href="/admin/analytics" class="btn">
+        <i class="fas fa-chart-pie"></i> View Analytics
+      </a>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Simple animation for cards
+    document.addEventListener('DOMContentLoaded', function() {
+      const cards = document.querySelectorAll('.admin-card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.5s ease ' + (index * 0.1) + 's';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 100);
+      });
+    });
+  </script>
+</body>
+</html>

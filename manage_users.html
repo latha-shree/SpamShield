@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Management | SpamShield</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #4361ee;
+      --secondary: #3a0ca3;
+      --accent: #f72585;
+      --light: #f8f9fa;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
+      min-height: 100vh;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 3, 32, 0.85);
+      z-index: -1;
+    }
+
+    /* Navigation Header */
+    .nav-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background: rgba(0, 3, 32, 0.8);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .logo-icon {
+      font-size: 1.5rem;
+      color: #4facfe;
+    }
+
+    .logo-text {
+      font-weight: 600;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Admin Card */
+    .admin-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 2.5rem;
+      max-width: 800px;
+      margin: 8rem auto;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .admin-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(90deg, #4facfe, #00f2fe);
+    }
+
+    /* Page Header */
+    .page-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .page-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      color: #4facfe;
+      background: rgba(79, 172, 254, 0.2);
+      width: 80px;
+      height: 80px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 2px solid rgba(79, 172, 254, 0.4);
+    }
+
+    .page-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* User Cards */
+    .user-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+
+    .user-card {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-card:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      flex-grow: 1;
+    }
+
+    .user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: rgba(79, 172, 254, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #4facfe;
+      border: 2px solid rgba(79, 172, 254, 0.4);
+      flex-shrink: 0;
+    }
+
+    .user-details {
+      flex-grow: 1;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .user-id {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    /* Delete Button */
+    .btn-delete {
+      background: rgba(37, 79, 247, 0.2);
+      color: #25caf7;
+      border: 1px solid rgba(37, 160, 247, 0.4);
+      padding: 0.6rem 1.2rem;
+      border-radius: 8px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-delete:hover {
+      background: rgba(247, 37, 133, 0.3);
+      color: #ff4d9e;
+      transform: translateY(-1px);
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    .empty-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      color: rgba(79, 172, 254, 0.5);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .admin-card {
+        padding: 1.5rem;
+        margin: 7rem auto 2rem;
+      }
+      
+      .user-info {
+        gap: 1rem;
+      }
+      
+      .btn-delete {
+        padding: 0.5rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation Header -->
+  <div class="nav-header">
+    <a href="/admin_dashboard" class="btn-nav">
+      <i class="fas fa-arrow-left"></i> Back
+    </a>
+    <div class="logo">
+      <i class="fas fa-shield-alt logo-icon"></i>
+      <span class="logo-text">SpamShield</span>
+    </div>
+    <a href="/logout" class="btn-nav">
+      <i class="fas fa-sign-out-alt"></i> Logout
+    </a>
+  </div>
+
+  <!-- User Management Section -->
+  <div class="admin-card">
+    <div class="page-header">
+      <div class="page-icon">
+        <i class="fas fa-users-cog"></i>
+      </div>
+      <h1 class="page-title">User Management</h1>
+      <p>View and manage all registered users</p>
+    </div>
+
+    {% if users %}
+    <div class="user-cards">
+      {% for user in users %}
+      <div class="user-card">
+        <div class="user-info">
+          <div class="user-avatar">
+            <i class="fas fa-user"></i>
+          </div>
+          <div class="user-details">
+            <div class="user-name">{{ user[1] }}</div>
+            <div class="user-id">User ID: {{ user[0] }}</div>
+          </div>
+        </div>
+        <form action="{{ url_for('delete_user', user_id=user[0]) }}" method="POST">
+          <button type="submit" class="btn-delete" onclick="return confirm('Are you sure you want to delete this user?');">
+            <i class="fas fa-trash-alt"></i> Delete
+          </button>
+        </form>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">
+        <i class="fas fa-user-slash"></i>
+      </div>
+      <h4>No Users Found</h4>
+      <p>There are currently no registered users in the system.</p>
+    </div>
+    {% endif %}
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Animation for user cards
+    document.addEventListener('DOMContentLoaded', function() {
+      const cards = document.querySelectorAll('.user-card');
+      cards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        card.style.transition = 'all 0.4s ease ' + (index * 0.1) + 's';
+        setTimeout(() => {
+          card.style.opacity = '1';
+          card.style.transform = 'translateY(0)';
+        }, 100);
+      });
+    });
+  </script>
+</body>
+</html>
